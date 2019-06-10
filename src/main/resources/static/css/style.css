@@ -1,0 +1,27 @@
+
+#table_span {
+	
+	background-image: url(../images/bg.gif);
+	background-repeat: no-repeat;
+	background-position: center right;
+	cursor: pointer;
+}
+/* table#table tbody td { */
+/* 	color: #3D3D3D; */
+/* 	padding: 4px; */
+/* 	background-color: #FFF; */
+/* 	vertical-align: top; */
+/* } */
+table#table tbody th.odd td {
+	background-color:#F0F0F6;
+}
+#table_span.tablesorter-headerDesc {
+	background: url(../images/asc.gif) no-repeat center right;
+}
+
+#table_span.tablesorter-headerAsc {
+	background: url(../images/desc.gif) no-repeat center right;
+}
+table#table thead th .headerSortDown, table.tablesorter thead tr .headerSortUp {
+background-color: #8dbdd8;
+}

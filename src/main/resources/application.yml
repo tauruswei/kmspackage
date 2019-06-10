@@ -1,0 +1,30 @@
+
+Spring:
+  thymeleaf:
+    # 关闭缓存，实时刷新，生产环境需要改为true
+    cache: false
+    prefix: classpath:/templates/
+    suffix: .html
+    encoding: UTF-8
+    mode: HTML5
+  servlet:
+    multipart:
+      max-file-size: 500MB
+      max-request-size: 500MB
+server:
+  port: 8080
+  servlet:
+    context-path: /KmsPackage/
+
+
+kmsPackage:
+  SecKMS: E:/updatefile/SecKMS/
+  KMIP: E:/updatefile/KMIP/
+  Rest: E:/updatefile/Rest/RestFul/
+  Standard: E:/updatefile/Standard/
+  HadoopKMS: E:/updatefile/HadoopKMS/HadoopKMS/
+  Soap: E:/updatefile/Soap/Soap/
+  version: E:/updatefile/versioninfo.properties
+  updateSign: E:/updatefile/
+  packageWithoutSign:
+  packageWithSign:

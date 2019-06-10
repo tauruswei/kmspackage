@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8"/>
+	<title>kms打包系统</title>
+	<meta name="renderer" content="webkit|ie-comp|ie-stand"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+
+    <!-- <link rel="shortcut icon" href="./favicon.ico" type="image/x-icon" /> -->
+    <link rel="stylesheet"  href="css/font.css"/>
+    <link rel="stylesheet"  href="css/xadmin.css"/>
+    <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+    <script src="lib/layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="js/xadmin.js"></script>
+    <script type="text/javascript">
+        var contextPath = this.location.href.split("/KmsPackage")[0];
+        var mycars=new Array();
+        mycars[0]="SecKMS";
+        mycars[1]="KMIP";
+        mycars[2]="KMIPController";
+        mycars[3]="Rest";
+        mycars[4]="Standard";
+        mycars[5]="HadoopKMS";
+        mycars[6]="Soap";
+        mycars[7]="Package";
+        function init(){
+            document.getElementById("iframe").src=contextPath+"/KmsPackage/welcome.html";
+        }
+        function changeColor(id) {
+            var selected = document.getElementById(id);
+            selected.style.backgroundColor = '#acd5f5';
+            selected.style.borderRadius = "4px";
+
+            for(var unselectedId in mycars){
+                if (mycars[unselectedId]!=id) {
+                    document.getElementById(mycars[unselectedId]).style.backgroundColor = '#eeeeee';
+                    document.getElementById(mycars[unselectedId]).style.borderRadius = "4px";
+                }
+            }
+        }
+        function secKms() {
+            changeColor("SecKMS");
+            document.getElementById("iframe").src = contextPath + "/KmsPackage/SecKms.html";
+        }
+        function kmipController() {
+            changeColor("KMIPController");
+            document.getElementById("iframe").src = contextPath + "/KmsPackage/KMIPController.html";
+        }
+        function kmip() {
+            changeColor("KMIP");
+            document.getElementById("iframe").src = contextPath + "/KmsPackage/KMIP.html";
+        }
+        function rest() {
+            changeColor("Rest");
+            document.getElementById("iframe").src = contextPath + "/KmsPackage/Rest.html";
+        }
+        function standard() {
+            changeColor("Standard");
+            document.getElementById("iframe").src = contextPath + "/KmsPackage/Standard.html";
+        }
+        function zipPackage() {
+            changeColor("Package");
+            document.getElementById("iframe").src = contextPath + "/KmsPackage/Package.html";
+        }
+    </script>
+</head>
+<body onload="init()">
+    <!-- 顶部开始 -->
+    <div class="container">
+        <div class="logo"><a href="./index.html">kms打包系统</a></div>
+        <div class="left_open">
+            <i title="展开左侧栏" class="iconfont">&#xe699;</i>
+        </div>
+        <ul class="layui-nav right" lay-filter="">
+          <li class="layui-nav-item">
+            <p><span style="color: #fff21b" th:text="${uname}"> Admin</span> , 欢迎你！</p>
+          </li>
+          <li class="layui-nav-item to-index"><a onclick="logout()">退出</a></li>
+        </ul>
+    </div>
+    <!-- 顶部结束 -->
+    <!-- 中部开始 -->
+     <!-- 左侧菜单开始 -->
+    <div class="left-nav" style="bottom: 0px;">
+      <div id="side-nav">
+        <ul id="nav">
+            <li>
+                <a onclick="secKms()" id = "SecKMS">
+                    <i class="iconfont">&#xe83c;</i>
+                    <cite>SecKMS</cite>
+                    <i class="iconfont nav_right">&#xe697;</i>
+                </a>
+            </li>
+            <li>
+                <a onclick="kmipController()" id = "KMIPController">
+                    <i class="iconfont">&#xe83c;</i>
+                    <cite>KMIPController</cite>
+                    <i class="iconfont nav_right">&#xe697;</i>
+                </a>
+            </li>
+            <li>
+                <a onclick="kmip()" id = "KMIP">
+                    <i class="iconfont">&#xe83c;</i>
+                    <cite>KMIP</cite>
+                    <i class="iconfont nav_right">&#xe697;</i>
+                </a>
+            </li>
+
+            <li>
+                <a onclick="rest()" id = "Rest">
+                    <i class="iconfont">&#xe83c;</i>
+                    <cite>Rest</cite>
+                    <i class="iconfont nav_right">&#xe697;</i>
+                </a>
+            </li>
+            <li>
+                <a onclick="standard()" id = "Standard">
+                    <i class="iconfont">&#xe83c;</i>
+                    <cite>Standard</cite>
+                    <i class="iconfont nav_right">&#xe697;</i>
+                </a>
+            </li>
+            <li>
+                <a onclick="modifyPassword()" id = "HadoopKMS">
+                    <i class="iconfont">&#xe83c;</i>
+                    <cite>HadoopKMS</cite>
+                    <i class="iconfont nav_right">&#xe697;</i>
+                </a>
+            </li>
+            <li>
+                <a onclick="modifyPassword()" id = "Soap">
+                    <i class="iconfont">&#xe83c;</i>
+                    <cite>Soap</cite>
+                    <i class="iconfont nav_right">&#xe697;</i>
+                </a>
+            </li>
+            <li>
+                <a onclick="zipPackage()" id = "Package">
+                    <i class="iconfont">&#xe6ae;</i>
+                    <cite>Package</cite>
+                    <i class="iconfont nav_right">&#xe697;</i>
+                </a>
+            </li>
+        </ul>
+      </div>
+    </div>
+    <!-- <div class="x-slide_left"></div> -->
+    <!-- 左侧菜单结束 -->
+    <!-- 右侧主体开始 -->
+    <div class="page-content"  style="bottom: 0px;">
+        <div class="layui-tab tab" lay-filter="xbs_tab" lay-allowclose="false">
+          <div class="layui-tab-content">
+            <div class="layui-tab-item layui-show">
+                <iframe id="iframe" frameborder="0" scrolling="yes" class="x-iframe"></iframe>
+            </div>
+          </div>
+        </div>
+    </div>
+</body>
+</html>
