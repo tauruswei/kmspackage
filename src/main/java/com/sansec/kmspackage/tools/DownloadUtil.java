@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URLEncoder;
@@ -53,5 +54,12 @@ public class DownloadUtil {
 			String sMsg = "downloadError error";
 			logger.error(sMsg, e);
 		}
+	}
+	public static void download(HttpServletRequest request, HttpServletResponse response, String packageWithSign) throws IOException {
+		System.out.println("文件路径是："+packageWithSign);
+		byte[] downloadData = FileTools.readFromFile(packageWithSign);
+		File file = new File(packageWithSign);
+		String name = file.getName();
+		DownloadUtil.downloadSuccess(request, response, name, downloadData);
 	}
 }

@@ -90,17 +90,11 @@ public class PackageController {
     }
     @GetMapping(value = "/downloadWithoutSign")
     public void download(HttpServletRequest request,HttpServletResponse response) throws Exception {
-        download(request, response, packageWithoutSign);
+        DownloadUtil.download(request, response, packageWithoutSign);
     }
     @GetMapping(value = "/downloadWithSign")
     public void downloadWithSign(HttpServletRequest request,HttpServletResponse response) throws IOException {
-        download(request, response, packageWithSign);
+        DownloadUtil.download(request, response, packageWithSign);
     }
-    private void download(HttpServletRequest request, HttpServletResponse response, String packageWithSign) throws IOException {
-        System.out.println("文件路径是："+packageWithSign);
-        byte[] downloadData = FileTools.readFromFile(packageWithSign);
-        File file = new File(packageWithSign);
-        String name = file.getName();
-        DownloadUtil.downloadSuccess(request, response, name, downloadData);
-    }
+
 }

@@ -89,7 +89,7 @@ public class ExecShell {
 	}
 	return pid;
 	}
-	
+
 	public static int getExecpythonProcess(String command) {
 		//System.out.println("开始执行："+command);
 		

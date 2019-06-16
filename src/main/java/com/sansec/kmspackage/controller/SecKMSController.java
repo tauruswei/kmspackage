@@ -1,5 +1,7 @@
 package com.sansec.kmspackage.controller;
 
+import com.sansec.kmspackage.tools.DownloadUtil;
+import com.sansec.kmspackage.tools.ExecShell;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -8,7 +10,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,13 +34,37 @@ import java.util.Map;
     String restPath;
     @Value("${kmsPackage.Standard}")
     String standardPath;
+
+    @Value("${kmsPackage.sqlErrorLog}")
+    String sqlErrorLogPath;
+
     @PostMapping("/SecKMS/war")
     public Map<String,Object> uploadSecKMSWar(@RequestParam("file") MultipartFile file, Model model){
         return getStringObjectMap(file, model, "SecKMS.war",secKmsPath);
     }
     @PostMapping("/SecKMS/sql")
-    public Map<String,Object> uploadSecKMSSql(@RequestParam("file") MultipartFile file, Model model){
-        return getStringObjectMap(file, model, "updatebase.sql",secKmsPath);
+    public Map<String,Object> uploadSecKMSSql(@RequestParam("file") MultipartFile file, Model model,
+                                              HttpServletRequest request, HttpServletResponse response) throws IOException {
+        Map<String, Object> map = getStringObjectMap(file, model, "updatebase.sql", secKmsPath);
+        if(!("0".equals(map.get("code").toString()))){
+            return map;
+        }
+        int result = 0;
+        String shell ="bash /opt/KmsPackage/shell/testSql.sh";
+        try {
+            result = ExecShell.getExecShellProcess(shell).waitFor();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        if(result==0){
+            map.put("code","0");
+            map.put("msg","sucess！");
+        }else{
+            map.put("code","1");
+            map.put("msg","sql有问题，详情请看error.log");
+        }
+        DownloadUtil.download(request,response,sqlErrorLogPath);
+        return map;
     }
     @PostMapping("/KMIPController/war")
     public Map<String,Object> uploadKMIPControllerSql(@RequestParam("file") MultipartFile file, Model model){

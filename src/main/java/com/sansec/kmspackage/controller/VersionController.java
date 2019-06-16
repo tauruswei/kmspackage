@@ -50,37 +50,40 @@ public class VersionController {
 
     @GetMapping(value = "/updateVersionInfo")
     public Map<String, Object> updateVersionInfo(@RequestParam(value = "module", required = true, defaultValue = "SecKMS") String module, @RequestParam(value = "version", required = true, defaultValue = "2.13") String version) {
+
         Map<String, Object> map = new HashMap<>();
         //当前版本号
         Properties pps = new Properties();
         InputStream is = null;
-        try {
-            is = new FileInputStream(versionFile);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        try {
-            pps.load(is);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        synchronized ("线程锁"){
+            try {
+                is = new FileInputStream(versionFile);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            try {
+                pps.load(is);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
 //        改变模块的版本号
-        pps.setProperty(module,version);
-        OutputStream  output = null;
-        try {
-            output = new FileOutputStream(versionFile);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            pps.setProperty(module,version);
+            OutputStream  output = null;
+            try {
+                output = new FileOutputStream(versionFile);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            try {
+                pps.store(output, "andieguo modify" + new Date().toString());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            map.put("code", "0");
+            map.put("msg", "success");
+            map.put("data", "");
         }
-        try {
-            pps.store(output, "andieguo modify" + new Date().toString());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        map.put("code", "0");
-        map.put("msg", "success");
-        map.put("data", "");
         return map;
     }
 }
