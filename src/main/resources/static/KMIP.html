@@ -26,8 +26,18 @@
                 contentType:false,
                 dataType:"json",
                 success:function(result){
-                    var version = result.version.toString();
-                    $("#version").attr("placeholder","当前版本号是："+version+"，请输入新的版本号");
+                    debugger;
+                    for (var key in result) {
+                        switch (key) {
+                            case "KMIP.zip":
+                                $("#KMIP_lastModifiedTime").text("已上传！"+result[key]);
+                                break;
+                            case "version":
+                                $("#version").attr("placeholder","当前版本号是："+result[key]+"，请输入新的版本号");
+                            default:
+                                break;
+                        }
+                    }
                 },
 
                 error:function(e){
@@ -35,6 +45,7 @@
                 }
             });
         }
+
         layui.use('upload', function(){
             var upload = layui.upload;
             //执行实例
@@ -49,8 +60,9 @@
                 ,done: function(res, index, upload){
                     layer.closeAll('loading'); //关闭loading
                     debugger;
-                    if(res.code="0"){
+                    if(res.code=="0"){
                         layer.msg("上传文件成功");
+                        init();
                     }else{
                         layer.msg("上传文件失败");
                     }
@@ -69,9 +81,10 @@
     <button type="button" class="layui-btn" id="KMIP" style="width: 30%">
         <i class="layui-icon">&#xe67c;</i>上传KMIP.zip
     </button>
+    <span id="KMIP_lastModifiedTime" style="position:absolute;font-size:16px;font-family:KaiTi_GB2312;color: #ff3355"></span>
     <br/>
     <br/>
-    <input type="text" id="version"  class="layui-input" placeholder="当前版本号是：2.13，请输入新的版本号" autocomplete="off" style="width:30%;font-size: medium">
+    <input type="text" id="version"  class="layui-input" placeholder="" autocomplete="off" style="width:30%;font-size: medium">
     <br/>
     <br/>
     <button class="layui-btn" lay-submit lay-filter="formDemo" style="margin-left: 0px" onclick="updateVersionInfo()">提交</button>
@@ -93,13 +106,12 @@
             success:function(res){
                 init();
                 $("#version").val("");
-                if(res.code="0"){
+                if(res.code=="0"){
                     layer.msg("修改版本号成功");
                 }else{
                     layer.msg("修改版本号失败");
                 }
             },
-
             error:function(e){
                 console.log("error");
             }

@@ -16,6 +16,33 @@
     <script src="js/jquery.form.js" charset="utf-8"></script>
     <script src="js/zoomify.min.js" charset="utf-8"></script>
     <script>
+        function init(){
+            $.ajax({
+                url:"/KmsPackage/getVersionInfo?module=SecKMS",
+                async: false, //同步执行
+                type:"get",
+//               data:form,
+                processData:false,
+                contentType:false,
+                dataType:"json",
+                success:function(result){
+                    debugger;
+                    for (var key in result) {
+                        switch (key) {
+                            case "KMIP-Controller-0.1.0-SNAPSHOT.war":
+                                $("#KMIPController_lastModifiedTime").text("已上传！"+result[key]);
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                },
+
+                error:function(e){
+                    console.log("error");
+                }
+            });
+        }
         layui.use('upload', function(){
             var upload = layui.upload;
             //执行实例
@@ -29,9 +56,9 @@
                 }
                 ,done: function(res, index, upload){
                     layer.closeAll('loading'); //关闭loading
-                    debugger;
-                    if(res.code="0"){
+                    if(res.code=="0"){
                         layer.msg("上传文件成功");
+                        init();
                     }else{
                         layer.msg("上传文件失败");
                     }
@@ -43,12 +70,13 @@
         });
     </script>
 </head>
-<body >
+<body onload="init()">
 
 <center style="position:absolute;top:100px;width:100%;font-size:25px;font-family:KaiTi_GB2312 ">
     <button type="button" class="layui-btn" id="KMIPController" style="width: 30%">
         <i class="layui-icon">&#xe67c;</i>上传KMIPController.war
     </button>
+    <span id="KMIPController_lastModifiedTime" style="position:absolute;font-size:16px;font-family:KaiTi_GB2312;color: #ff3355"></span>
 </center>
 
 </body>

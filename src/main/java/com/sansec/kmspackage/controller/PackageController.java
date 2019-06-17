@@ -10,10 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,7 +31,8 @@ public class PackageController {
     String packageWithoutSign;
     @Value("${kmsPackage.packageWithSign}")
     String packageWithSign;
-
+    @Value("${kmsPackage.sqlErrorLog}")
+    String sqlErrorLogPath;
     @GetMapping(value = "/packageWithoutSign")
     public Map<String,Object> packageWithoutSign(){
         String shell ="bash /opt/KmsPackage/shell/PackageWithoutSign.sh";
@@ -90,11 +88,21 @@ public class PackageController {
     }
     @GetMapping(value = "/downloadWithoutSign")
     public void download(HttpServletRequest request,HttpServletResponse response) throws Exception {
-        DownloadUtil.download(request, response, packageWithoutSign);
+       DownloadUtil.download(request, response, packageWithoutSign);
     }
     @GetMapping(value = "/downloadWithSign")
     public void downloadWithSign(HttpServletRequest request,HttpServletResponse response) throws IOException {
         DownloadUtil.download(request, response, packageWithSign);
+    }
+
+//    @GetMapping(value = "/downloadByNmae/{name}")
+//    public void downloadWithSign(@PathVariable("name") String name,HttpServletRequest request,HttpServletResponse response) throws IOException {
+//        name = "/opt/xtrabackup/backup/"+name+".bak";
+//        DownloadUtil.download(request, response, name);
+//    }
+    @GetMapping(value = "/downloadSqlErrorLog")
+    public void downloadSqlErrorLog(HttpServletRequest request,HttpServletResponse response) throws IOException {
+        DownloadUtil.download(request, response, sqlErrorLogPath);
     }
 
 }

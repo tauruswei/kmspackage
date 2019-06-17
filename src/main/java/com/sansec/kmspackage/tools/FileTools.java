@@ -4,6 +4,11 @@ import ch.ethz.ssh2.Connection;
 import ch.ethz.ssh2.SCPClient;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.nio.file.attribute.FileTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.*;
 
 /**
@@ -402,6 +407,55 @@ public class FileTools {
         FileOutputStream out = new FileOutputStream(fileName);
         out.write(data);
         out.close();
+    }
+
+    /**
+     *
+     * 获取目录下所有文件
+     *
+     * @param realpath
+     * @param files
+     * @return
+     */
+    public static List<File> getFiles(String realpath, List<File> files) {
+        File realFile = new File(realpath);
+        if (realFile.isDirectory()) {
+            File[] subfiles = realFile.listFiles();
+            for (File file : subfiles) {
+                if (file.isDirectory()) {
+                    getFiles(file.getAbsolutePath(), files);
+                } else {
+                    files.add(file);
+                }
+            }
+        }
+        return files;
+    }
+
+    /**
+     * 获取文件的修改时间
+     * @param fullFileName
+     */
+    public static String getModifiedTime(String fullFileName){
+        File file = new File(fullFileName);
+        if (!file.exists()){
+            return "";
+        }
+        BasicFileAttributes bAttributes = null;
+        try {
+            bAttributes = Files.readAttributes(file.toPath(),BasicFileAttributes.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // 修改时间
+        FileTime fileTime = bAttributes.lastModifiedTime();
+
+        ZonedDateTime ztime1=ZonedDateTime.ofInstant(fileTime.toInstant(), ZoneId.systemDefault());
+        String time1 = ztime1.toLocalDateTime().toString().replace("T"," ");
+//        System.out.println(time1);
+
+        return time1.split("\\.")[0];
     }
 
 }

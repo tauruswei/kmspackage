@@ -1,19 +1,15 @@
 package com.sansec.kmspackage.controller;
 
+import com.sansec.kmspackage.tools.FileTools;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.*;
-import java.lang.reflect.MalformedParameterizedTypeException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * @Author: WeiBingtao/13156050650@163.com
@@ -26,6 +22,14 @@ import java.util.Properties;
 public class VersionController {
     @Value("${kmsPackage.version}")
     String versionFile;
+    @Value("${kmsPackage.SecKMS}")
+    String secKmsPath;
+    @Value("${kmsPackage.KMIP}")
+    String kmipPath;
+    @Value("${kmsPackage.Rest}")
+    String restPath;
+    @Value("${kmsPackage.Standard}")
+    String standardPath;
 
     @GetMapping(value = "/getVersionInfo")
     public Map<String, Object> getVersionInfo(@RequestParam(value = "module", required = true, defaultValue = "SecKMS") String module) {
@@ -45,6 +49,9 @@ public class VersionController {
         }
         String version = pps.getProperty(module);
         map.put("version", version);
+
+//        获取文件的修改时间信息
+        getLastModifiedTime(module, map);
         return map;
     }
 
@@ -86,4 +93,47 @@ public class VersionController {
         }
         return map;
     }
+
+    @GetMapping(value = "/getUploadInfo")
+    public Map<String, Object> getUploadInfo(@RequestParam(value = "module", required = true, defaultValue = "SecKMS") String module) {
+        Map<String, Object> map = new HashMap<>();
+//        获取文件的修改时间信息
+        getLastModifiedTime(module, map);
+        return map;
+    }
+
+    private void getLastModifiedTime(@RequestParam(value = "module", required = true, defaultValue = "SecKMS") String module, Map<String, Object> map) {
+        List<File> files = new ArrayList<>();
+        List<File> files1 = new ArrayList<>();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        switch (module) {
+            case "SecKMS":
+                files1 = FileTools.getFiles(secKmsPath, files);
+                for (File file : files1) {
+                    map.put(file.getName(), sdf.format(new Date(file.lastModified())));
+                }
+                break;
+            case "ServerA":
+                files1 = FileTools.getFiles(kmipPath, files);
+                for (File file : files1) {
+                    map.put(file.getName(), sdf.format(new Date(file.lastModified())));
+                }
+                break;
+            case "ServerB":
+                files1 = FileTools.getFiles(standardPath, files);
+                for (File file : files1) {
+                    map.put(file.getName(), sdf.format(new Date(file.lastModified())));
+                }
+                break;
+            case "Rest":
+                files1 = FileTools.getFiles(restPath, files);
+                for (File file : files1) {
+                    map.put(file.getName(), sdf.format(new Date(file.lastModified())));
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
 }

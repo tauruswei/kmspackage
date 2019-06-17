@@ -63,7 +63,6 @@ import java.util.Map;
             map.put("code","1");
             map.put("msg","sql有问题，详情请看error.log");
         }
-        DownloadUtil.download(request,response,sqlErrorLogPath);
         return map;
     }
     @PostMapping("/KMIPController/war")
@@ -74,7 +73,7 @@ import java.util.Map;
     public Map<String,Object> uploadKMIPZip(@RequestParam("file") MultipartFile file, Model model){
         return getStringObjectMap(file, model, "KMIP.zip",kmipPath);
     }
-    @PostMapping("/Rest/war")
+    @PostMapping("/Rest/jar")
     public Map<String,Object> uploadRestJar(@RequestParam("file") MultipartFile file, Model model){
         return getStringObjectMap(file, model, "kms-restful.jar",restPath);
     }

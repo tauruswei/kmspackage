@@ -32,6 +32,7 @@
                         layer.closeAll('loading');
                         layer.msg("打包失败!"+result.msg);
                     }
+
                 },
                 error:function(e){
                     layer.closeAll('loading');
@@ -58,7 +59,7 @@
                 }
                 ,done: function(res, index, upload){
                     layer.closeAll('loading'); //关闭loading
-                    if(res.code="0"){
+                    if(res.code=="0"){
                         layer.msg("上传文件并打包成功");
                     }else{
                         layer.msg("上传文件失败");
@@ -75,17 +76,19 @@
 
 <center style="position:absolute;top:100px;width:100%;font-size:25px;font-family:KaiTi_GB2312 ">
     <button type="button" class="layui-btn" onclick="packageWithoutSign()" style="width: 30%">打包，不带签名</button>
+    <span id="packageWithoutSign_lastModifiedTime" style="position:absolute;font-size:16px;font-family:KaiTi_GB2312;color: #ff3355"></span>
     <br>
     <br>
-    <button type="button" class="layui-btn layui-btn-warm" onclick="downloadWithoutSign()" style="width: 30%">下载，不带签名</button>
+    <button type="button" class="layui-btn layui-btn-warm" onclick="downloadWithoutSign()" style="width: 30%">下载升级包，不带签名</button>
     <br>
     <br>
     <button type="button" class="layui-btn" id="updateSign" style="width: 30%">
-        <i class="layui-icon">&#xe67c;</i>上传签名，打包
+        <i class="layui-icon">&#xe67c;</i>上传签名文件，打包
     </button>
+    <span id="updateSign_lastModifiedTime" style="position:absolute;font-size:16px;font-family:KaiTi_GB2312;color: #ff3355"></span>
     <br>
     <br>
-    <button type="button" class="layui-btn layui-btn-warm" onclick="downloadWithSign()" style="width: 30%">下载，带签名</button>
+    <button type="button" class="layui-btn layui-btn-warm" onclick="downloadWithSign()" style="width: 30%">下载升级包，带签名</button>
     <br/>
     <br/>
 </center>
