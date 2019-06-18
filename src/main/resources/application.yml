@@ -28,3 +28,5 @@ kmsPackage:
   updateSign: E:/updatefile/
   packageWithoutSign:
   packageWithSign:
+  sqlErrorLog: /opt/KmsPackage/sqlErrorLog.log
+

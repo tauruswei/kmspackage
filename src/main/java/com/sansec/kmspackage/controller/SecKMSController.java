@@ -91,7 +91,7 @@ import java.util.Map;
         Map<String, Object> map = new HashMap<String, Object>();
         if (file.isEmpty()) {
             model.addAttribute("message", "The file is empty!");
-            map.put("code", "1");
+            map.put("code", 1);
             map.put("msg", "The file is empty!");
             map.put("data", "");
             return map;
@@ -108,7 +108,7 @@ import java.util.Map;
         } catch (Exception e) {
             e.printStackTrace();
         }
-        map.put("code", "0");
+        map.put("code", 0);
         map.put("msg", "success");
         map.put("data", "");
         return map;

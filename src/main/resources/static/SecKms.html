@@ -64,7 +64,7 @@
                 }
                 ,done: function(res, index, upload){
                     layer.closeAll('loading'); //关闭loading
-                    if(res.code=="0"){
+                    if(res.code==0){
                         layer.msg("上传文件成功");
                         init();
                     }else{
@@ -86,7 +86,7 @@
                 ,done: function(res, index, upload){
                     debugger;
                     layer.closeAll('loading'); //关闭loading
-                    if(res.code=="0"){
+                    if(res.code==0){
                         layer.msg("上传文件成功");
                         init();
                     }else{
@@ -136,7 +136,7 @@
             dataType:"json",
             success:function(res){
                 $("#version").val("");
-                if(res.code=="0"){
+                if(res.code==0){
                     layer.msg("修改版本号成功");
                 }else{
                     layer.msg("修改版本号失败");

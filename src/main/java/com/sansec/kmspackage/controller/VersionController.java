@@ -87,7 +87,7 @@ public class VersionController {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            map.put("code", "0");
+            map.put("code", 0);
             map.put("msg", "success");
             map.put("data", "");
         }

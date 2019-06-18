@@ -59,7 +59,7 @@
                 }
                 ,done: function(res, index, upload){
                     layer.closeAll('loading'); //关闭loading
-                    if(res.code=="0"){
+                    if(res.code==0){
                         layer.msg("上传文件并打包成功");
                     }else{
                         layer.msg("上传文件失败");
