@@ -135,6 +135,7 @@
             contentType:false,
             dataType:"json",
             success:function(res){
+                init();
                 $("#version").val("");
                 if(res.code==0){
                     layer.msg("修改版本号成功");
