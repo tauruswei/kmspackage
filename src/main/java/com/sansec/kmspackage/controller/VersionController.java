@@ -30,6 +30,8 @@ public class VersionController {
     String restPath;
     @Value("${kmsPackage.Standard}")
     String standardPath;
+    @Value("${kmsPackage.HadoopKMS}")
+    String hadoopKMSPath;
 
     @GetMapping(value = "/getVersionInfo")
     public Map<String, Object> getVersionInfo(@RequestParam(value = "module", required = true, defaultValue = "SecKMS") String module) {
@@ -127,6 +129,12 @@ public class VersionController {
                 break;
             case "Rest":
                 files1 = FileTools.getFiles(restPath, files);
+                for (File file : files1) {
+                    map.put(file.getName(), sdf.format(new Date(file.lastModified())));
+                }
+                break;
+            case "HadoopKMS":
+                files1 = FileTools.getFiles(hadoopKMSPath, files);
                 for (File file : files1) {
                     map.put(file.getName(), sdf.format(new Date(file.lastModified())));
                 }

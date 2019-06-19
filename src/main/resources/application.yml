@@ -12,7 +12,7 @@ Spring:
       max-file-size: 500MB
       max-request-size: 500MB
 server:
-  port: 8080
+  port: 8011
   servlet:
     context-path: /KmsPackage/
 
@@ -22,7 +22,7 @@ kmsPackage:
   KMIP: E:/updatefile/KMIP/
   Rest: E:/updatefile/Rest/RestFul/
   Standard: E:/updatefile/Standard/
-  HadoopKMS: E:/updatefile/HadoopKMS/HadoopKMS/
+  HadoopKMS: E:/updatefile/
   Soap: E:/updatefile/Soap/Soap/
   version: E:/updatefile/versioninfo.properties
   updateSign: E:/updatefile/

@@ -60,6 +60,10 @@
             changeColor("Standard");
             document.getElementById("iframe").src = contextPath + "/KmsPackage/Standard.html";
         }
+        function hadoopKMS() {
+            changeColor("HadoopKMS");
+            document.getElementById("iframe").src = contextPath + "/KmsPackage/HadoopKMS.html";
+        }
         function zipPackage() {
             changeColor("Package");
             document.getElementById("iframe").src = contextPath + "/KmsPackage/Package.html";
@@ -123,7 +127,7 @@
                 </a>
             </li>
             <li>
-                <a onclick="modifyPassword()" id = "HadoopKMS">
+                <a onclick="hadoopKMS()" id = "HadoopKMS">
                     <i class="iconfont">&#xe83c;</i>
                     <cite>HadoopKMS</cite>
                     <i class="iconfont nav_right">&#xe697;</i>
