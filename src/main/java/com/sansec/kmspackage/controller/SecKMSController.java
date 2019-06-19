@@ -2,9 +2,14 @@ package com.sansec.kmspackage.controller;
 
 import com.sansec.kmspackage.result.CodeMsg;
 import com.sansec.kmspackage.result.Result;
+import com.sansec.kmspackage.service.UploadService;
 import com.sansec.kmspackage.tools.DownloadUtil;
 import com.sansec.kmspackage.tools.ExecShell;
-import com.sun.org.apache.bcel.internal.classfile.Code;
+import com.sansec.kmspackage.tools.LogTool;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,15 +25,17 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.sansec.kmspackage.tools.LogTool.returnErrorInfo;
+
 /**
  * @Author: WeiBingtao/13156050650@163.com
  * @Version: 1.0
  * @Description:
  * @Date: 2019/6/7 13:03
  */
-@RestController
-@RequestMapping(value = "/upload")
-public class SecKMSController {
+ @RestController
+ @RequestMapping(value = "/upload")
+ public class SecKMSController {
     @Value("${kmsPackage.SecKMS}")
     String secKmsPath;
     @Value("${kmsPackage.KMIP}")
@@ -43,69 +50,76 @@ public class SecKMSController {
     @Value("${kmsPackage.sqlErrorLog}")
     String sqlErrorLogPath;
 
-    @PostMapping("/SecKMS/war")
-    public Map<String, Object> uploadSecKMSWar(@RequestParam("file") MultipartFile file, Model model) {
-        return getStringObjectMap(file, model, "SecKMS.war", secKmsPath);
-    }
+    @Autowired
+    UploadService uploadService;
 
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    @PostMapping("/SecKMS/war")
+    public Result uploadSecKMSWar(@RequestParam("file") MultipartFile file, Model model) {
+        return uploadService.getStringObjectMap(file, model, "SecKMS.war", secKmsPath);
+    }
     @PostMapping("/SecKMS/sql")
-    public Map<String, Object> uploadSecKMSSql(@RequestParam("file") MultipartFile file, Model model, HttpServletRequest request, HttpServletResponse response) throws IOException {
-        Map<String, Object> map = getStringObjectMap(file, model, "updatebase.sql", secKmsPath);
-        if (!("0".equals(map.get("code").toString()))) {
-            return map;
+    public Result uploadSecKMSSql(@RequestParam("file") MultipartFile file, Model model, HttpServletRequest request, HttpServletResponse response) throws IOException {
+        Result  result = uploadService.getStringObjectMap(file, model, "updatebase.sql", secKmsPath);
+        if (0!=result.getCode()) {
+            return result;
         }
-        int result = 0;
+        int shellResult = 0;
         String shell = "bash /opt/KmsPackage/shell/testSql.sh";
         try {
-            result = ExecShell.getExecShellProcess(shell).waitFor();
+            shellResult = ExecShell.getExecShellProcess(shell).waitFor();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        if (result == 0) {
-            map.put("code", "0");
-            map.put("msg", "sucess！");
+        if (shellResult == 0) {
+            logger.info(LogTool.genLogMsg(MDC.get("ip"),"","", "", "", "", CodeMsg.SQL_SUCCESS.getCode(), CodeMsg.SQL_SUCCESS.getMsg(),
+                    "",""));
+            return Result.success("");
         } else {
-            map.put("code", "1");
-            map.put("msg", "sql有问题，详情请看error.log");
+            logger.error(LogTool.genLogMsg(MDC.get("ip"),"","", "", "", "", CodeMsg.SQL_ERROR.getCode(), CodeMsg.SQL_ERROR.getMsg(),
+                    returnErrorInfo().get(0),returnErrorInfo().get(1)));
+            return Result.error(CodeMsg.SQL_ERROR);
         }
-        return map;
     }
-
     @PostMapping("/KMIPController/war")
-    public Map<String, Object> uploadKMIPControllerSql(@RequestParam("file") MultipartFile file, Model model) {
-        return getStringObjectMap(file, model, "KMIP-Controller-0.1.0-SNAPSHOT.war", secKmsPath);
+    public Result uploadKMIPControllerSql(@RequestParam("file") MultipartFile file, Model model) {
+        return uploadService.getStringObjectMap(file, model, "KMIP-Controller-0.1.0-SNAPSHOT.war", secKmsPath);
     }
 
     @PostMapping("/KMIP/zip")
-    public Map<String, Object> uploadKMIPZip(@RequestParam("file") MultipartFile file, Model model) {
-        return getStringObjectMap(file, model, "KMIP.zip", kmipPath);
+    public Result uploadKMIPZip(@RequestParam("file") MultipartFile file, Model model) {
+        return uploadService.getStringObjectMap(file, model, "KMIP.zip", kmipPath);
     }
 
     @PostMapping("/Rest/jar")
-    public Map<String, Object> uploadRestJar(@RequestParam("file") MultipartFile file, Model model) {
-        return getStringObjectMap(file, model, "kms-restful.jar", restPath);
+    public Result uploadRestJar(@RequestParam("file") MultipartFile file, Model model) {
+        return uploadService.getStringObjectMap(file, model, "kms-restful.jar", restPath);
     }
 
     @PostMapping("/Standard/zip")
-    public Map<String, Object> uploadStandardZip(@RequestParam("file") MultipartFile file, Model model) {
-        return getStringObjectMap(file, model, "update.zip", standardPath);
+    public Result uploadStandardZip(@RequestParam("file") MultipartFile file, Model model) {
+        return uploadService.getStringObjectMap(file, model, "update.zip", standardPath);
     }
 
     @PostMapping("/Standard/sh")
-    public Map<String, Object> uploadStandardSh(@RequestParam("file") MultipartFile file, Model model) {
-        return getStringObjectMap(file, model, "update.sh", standardPath);
+    public Result uploadStandardSh(@RequestParam("file") MultipartFile file, Model model) {
+        return uploadService.getStringObjectMap(file, model, "update.sh", standardPath);
     }
-
     @PostMapping("/HadoopKMS/zip")
     public Result uploadHadoopKMSZip(@RequestParam("file") MultipartFile file, Model model) throws InterruptedException {
-        Map<String, Object> stringObjectMap = getStringObjectMap(file, model, "HadoopKMS.zip", hadoopKMSPath);
-        if ((Integer) stringObjectMap.get("code") == 0) {
+        Result stringObjectMap = uploadService.getStringObjectMap(file, model, "update.sh", standardPath);
+        if (stringObjectMap.getCode() == 0) {
             ExecShell.getExecShellProcess("rm -rf /opt/KmsPackage/updatefile/updatefile/HadoopKMS").waitFor();
             String shell = "unzip -o -d /opt/KmsPackage/updatefile/updatefile/ /opt/KmsPackage/updatefile/updatefile/HadoopKMS.zip";
             int shellResult = ExecShell.getExecShellProcess(shell).waitFor();
             if (shellResult == 0) {
+                logger.info(LogTool.genLogMsg(MDC.get("ip"),"","", "", "", "", CodeMsg.UPLOAD_SUCCESS.getCode(), CodeMsg.UPLOAD_SUCCESS.getMsg(),
+                        "",""));
                 return Result.success("");
             } else {
+                logger.error(LogTool.genLogMsg(MDC.get("ip"),"","", "", "", "", CodeMsg.UNZIP_ERROR.getCode(), CodeMsg.UNZIP_ERROR.getMsg(),
+                        returnErrorInfo().get(0),returnErrorInfo().get(1)));
                 return Result.error(CodeMsg.UNZIP_ERROR);
             }
         } else {
@@ -113,32 +127,4 @@ public class SecKMSController {
         }
     }
 
-    public Map<String, Object> getStringObjectMap(@RequestParam("file") MultipartFile file, Model model, String fileName, String filePath) {
-        Map<String, Object> map = new HashMap<String, Object>();
-        if (file.isEmpty()) {
-            model.addAttribute("message", "The file is empty!");
-            map.put("code", 1);
-            map.put("msg", "The file is empty!");
-            map.put("data", "");
-            return map;
-        }
-        try {
-            ExecShell.getExecShellProcess("rm -rf "+filePath+fileName).waitFor();
-            System.out.println("路径是：" + filePath);
-            File localFile = new File(filePath, fileName);
-            File parent = localFile.getParentFile();
-            if (parent != null && !parent.exists()) {
-                parent.mkdirs();
-            }
-            file.transferTo(localFile);
-            model.addAttribute("message", "succes");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        map.put("code", 0);
-        map.put("msg", "success");
-        map.put("data", "");
-        return map;
-    }
-
-}
+ }

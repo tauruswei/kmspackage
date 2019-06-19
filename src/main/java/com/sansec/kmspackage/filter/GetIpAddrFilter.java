@@ -2,11 +2,12 @@ package com.sansec.kmspackage.filter;
 
 import com.sansec.kmspackage.tools.LogTool;
 import org.slf4j.MDC;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-
+@Component
 public class GetIpAddrFilter implements Filter {
 
     @Override

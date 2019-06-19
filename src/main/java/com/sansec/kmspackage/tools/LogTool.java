@@ -34,32 +34,34 @@ public final class LogTool {
      */
     public static String genLogMsg(String ip, String userName, String subject, String keyName, String operation, String status, Integer code, String msg, String fileName, String lineNum) {
         StringBuilder sbf = new StringBuilder();
-        sbf.append("[operation:").append(operation).append(", ");
-        sbf.append("status:").append(status);
+//        sbf.append("[operation:").append(operation).append(", ");
+//        sbf.append("status:").append(status);
+//
+//        if (STATUS_FAIL.equals(status)) {
+//            sbf.append(", errcode:").append(code).append(", ");
+//            sbf.append("errmsg:").append(msg);
+//        } else {
+//            sbf.append(", tokenid:").append(msg);
+//        }
+//        sbf.append("] ");
+        sbf.append("[code: ").append(code).append(", ");
+        sbf.append("msg:").append(msg).append("] ");
 
-        if (STATUS_FAIL.equals(status)) {
-            sbf.append(", errcode:").append(code).append(", ");
-            sbf.append("errmsg:").append(msg);
-        } else {
-            sbf.append(", tokenid:").append(msg);
-        }
-        sbf.append("] ");
-
-        sbf.append("[session ").append(ip).append("] ");
-        if (StringUtils.isNotBlank(userName)) {
-            sbf.append("[user ").append(userName);
-        }
-        if (StringUtils.isNotBlank(subject)) {
-            sbf.append(" : ").append(subject);
-        }
-        sbf.append("] ");
-
-        if (StringUtils.isNotBlank(keyName)) {
-            sbf.append("[args ");
-            sbf.append("keyname=").append(keyName).append("] ");
-        }
+        sbf.append("[session: ").append(ip).append("] ");
+//        if (StringUtils.isNotBlank(userName)) {
+//            sbf.append("[user ").append(userName);
+//        }
+//        if (StringUtils.isNotBlank(subject)) {
+//            sbf.append(" : ").append(subject);
+//        }
+//        sbf.append("] ");
+//
+//        if (StringUtils.isNotBlank(keyName)) {
+//            sbf.append("[args ");
+//            sbf.append("keyname=").append(keyName).append("] ");
+//        }
         if (StringUtils.isNotBlank(fileName)) {
-            sbf.append("[position ");
+            sbf.append("[position: ");
             sbf.append(fileName).append(":").append(lineNum).append("]");
         }
         return sbf.toString();

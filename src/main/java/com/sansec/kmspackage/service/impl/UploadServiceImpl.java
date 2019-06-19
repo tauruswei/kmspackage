@@ -1,5 +1,8 @@
 package com.sansec.kmspackage.service.impl;
 
+import com.sansec.kmspackage.result.CodeMsg;
+import com.sansec.kmspackage.result.Result;
+import com.sansec.kmspackage.service.UploadService;
 import com.sansec.kmspackage.tools.LogTool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,36 +25,30 @@ import static com.sansec.kmspackage.tools.LogTool.returnErrorInfo;
  * @Date: 2019/6/17 18:38
  */
 @Service
-public class UploadServiceImpl {
-    public Map<String, Object> getStringObjectMap(@RequestParam("file") MultipartFile file, Model model, String fileName,
-                                                  String filePath) {
+public class UploadServiceImpl implements UploadService {
+    @Override
+    public Result getStringObjectMap(@RequestParam("file") MultipartFile file, Model model, String fileName, String filePath) {
         Logger logger = LoggerFactory.getLogger(this.getClass());
-        Map<String, Object> map = new HashMap<String, Object>();
         if (file.isEmpty()) {
-            model.addAttribute("message", "The file is empty!");
-            map.put("code", 1);
-            map.put("msg", "The file is empty!");
-            map.put("data", "");
-            logger.error(LogTool.genLogMsg(MDC.get("ip"),"","", "", "", "", (Integer) map.get("code"), map.get("msg").toString(),
-                    returnErrorInfo().get(0),returnErrorInfo().get(1)));
-            return map;
+            logger.error(LogTool.genLogMsg(MDC.get("ip"), "", "", "", "", "",
+                    CodeMsg.UPLOAD_ERROR.getCode(), CodeMsg.UPLOAD_ERROR.fillArgs("The file is empty!").getMsg(), returnErrorInfo().get(0), returnErrorInfo().get(1)));
+            return Result.error(CodeMsg.UPLOAD_ERROR.fillArgs("The file is empty!"));
         }
         try {
-            System.out.println("路径是："+filePath);
+//            System.out.println("路径是：" + filePath);
             File localFile = new File(filePath, fileName);
             File parent = localFile.getParentFile();
             if (parent != null && !parent.exists()) {
                 parent.mkdirs();
             }
             file.transferTo(localFile);
-            model.addAttribute("message", "succes");
         } catch (Exception e) {
-            logger.error(LogTool.genLogMsg(MDC.get("ip"),"","", "", "", "", (Integer) map.get("code"), map.get("msg").toString(),
-                    returnErrorInfo().get(0),returnErrorInfo().get(1)));
+            logger.error(LogTool.genLogMsg(MDC.get("ip"), "", "", "", "", "",
+                    CodeMsg.UPLOAD_ERROR.getCode(), CodeMsg.UPLOAD_ERROR.fillArgs(e.getMessage()).getMsg(), returnErrorInfo().get(0), returnErrorInfo().get(1)));
+            return Result.error(CodeMsg.UPLOAD_ERROR.fillArgs(e.getMessage()));
         }
-        map.put("code", 0);
-        map.put("msg", "success");
-        map.put("data", "");
-        return map;
+        logger.info(LogTool.genLogMsg(MDC.get("ip"), "", "", "", "", "",
+                CodeMsg.UPLOAD_SUCCESS.getCode(), CodeMsg.UPLOAD_SUCCESS.getMsg(), returnErrorInfo().get(0), returnErrorInfo().get(1)));
+        return Result.success("");
     }
 }

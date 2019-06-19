@@ -54,7 +54,7 @@ public class DownloadUtil {
 		}
 	}
 	public static void download(HttpServletRequest request, HttpServletResponse response, String packageWithSign) throws IOException {
-		System.out.println("文件路径是："+packageWithSign);
+//		System.out.println("文件路径是："+packageWithSign);
 		try {
 			File file = new File(packageWithSign);
 			if (file.exists()) {
