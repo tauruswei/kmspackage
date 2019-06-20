@@ -48,7 +48,7 @@ public class UploadServiceImpl implements UploadService {
             return Result.error(CodeMsg.UPLOAD_ERROR.fillArgs(e.getMessage()));
         }
         logger.info(LogTool.genLogMsg(MDC.get("ip"), "", "", "", "", "",
-                CodeMsg.UPLOAD_SUCCESS.getCode(), CodeMsg.UPLOAD_SUCCESS.getMsg(), returnErrorInfo().get(0), returnErrorInfo().get(1)));
+                CodeMsg.UPLOAD_SUCCESS.getCode(), CodeMsg.UPLOAD_SUCCESS.getMsg(), "", ""));
         return Result.success("");
     }
 }
