@@ -1,7 +1,9 @@
 package com.sansec.kmspackage.controller;
 
 import com.sansec.kmspackage.tools.FileTools;
+import com.sansec.kmspackage.tools.Util;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.util.Base64Utils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -65,6 +67,7 @@ public class VersionController {
         Properties pps = new Properties();
         InputStream is = null;
         synchronized ("线程锁"){
+            byte[] bytes2 = new byte[0];
             try {
                 is = new FileInputStream(versionFile);
             } catch (FileNotFoundException e) {

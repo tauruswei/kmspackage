@@ -108,12 +108,13 @@ import static com.sansec.kmspackage.tools.LogTool.returnErrorInfo;
     }
     @PostMapping("/HadoopKMS/zip")
     public Result uploadHadoopKMSZip(@RequestParam("file") MultipartFile file, Model model) throws InterruptedException {
-        Result stringObjectMap = uploadService.getStringObjectMap(file, model, "update.sh", standardPath);
+        Result stringObjectMap = uploadService.getStringObjectMap(file, model, "HadoopKMS.zip", hadoopKMSPath);
         if (stringObjectMap.getCode() == 0) {
             ExecShell.getExecShellProcess("rm -rf /opt/KmsPackage/updatefile/updatefile/HadoopKMS").waitFor();
             String shell = "unzip -o -d /opt/KmsPackage/updatefile/updatefile/ /opt/KmsPackage/updatefile/updatefile/HadoopKMS.zip";
             int shellResult = ExecShell.getExecShellProcess(shell).waitFor();
             if (shellResult == 0) {
+                int i = ExecShell.getExecShellProcess("rm -f /opt/KmsPackage/updatefile/updatefile/HadoopKMS.zip").waitFor();
                 logger.info(LogTool.genLogMsg(MDC.get("ip"),"","", "", "", "", CodeMsg.UPLOAD_SUCCESS.getCode(), CodeMsg.UPLOAD_SUCCESS.getMsg(),
                         "",""));
                 return Result.success("");

@@ -12,7 +12,12 @@ Spring:
       max-file-size: 500MB
       max-request-size: 500MB
 server:
-  port: 8011
+  port: 11111
+  ssl:
+    key-store: classpath:keystore.p12
+    key-store-password: 12345678
+    keyStoreType: PKCS12
+    keyAlias: tomcat
   servlet:
     context-path: /KmsPackage/
 
@@ -29,4 +34,4 @@ kmsPackage:
   packageWithoutSign:
   packageWithSign:
   sqlErrorLog: /opt/KmsPackage/sqlErrorLog.log
-
+  certPath: /opt/siwei/test06036.cer

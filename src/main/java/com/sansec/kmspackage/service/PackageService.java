@@ -12,5 +12,6 @@ import com.sansec.kmspackage.result.Result;
 
 
 public interface PackageService {
-    public Result packageZipFile(String shell);
+    Result packageZipFile(String shell);
+    Result verifySign();
 }

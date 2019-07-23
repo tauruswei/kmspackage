@@ -1,8 +1,13 @@
 package com.sansec.kmspackage.test;
 
 
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
+
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @Author: WeiBingtao/13156050650@163.com
@@ -93,4 +98,18 @@ public class Test {
 //        }
 //
 //    }
+    @org.junit.Test
+    public void test3(){
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<String> responseEntity = restTemplate.getForEntity("http://http://39.106.212.6:8080/KmsPackage/package/downloadByNmae/"+1, String.class);
+    }
+    @org.junit.Test
+    public void test4(){
+        Map<String,Object> map = new HashMap<>();
+        map.put("code",1);
+        map.put("msg","hello");
+        System.out.println((Integer) map.get("code")+1);
+        System.out.println(map.get("msg").toString());
+    }
+
 }
