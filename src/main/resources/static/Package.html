@@ -61,6 +61,8 @@
                     layer.closeAll('loading'); //关闭loading
                     if(res.code==0){
                         layer.msg("上传文件并打包成功");
+                    }else if(res.code==500301){
+                        layer.msg("签名验证失败");
                     }else{
                         layer.msg("上传文件失败");
                     }

@@ -65,7 +65,7 @@ public class PackageController {
             return Result.error(CodeMsg.UPLOAD_ERROR.fillArgs(e.getMessage()));
         }
 
-        Result result1 = packageService.verifySign();
+        packageService.verifySign();
 
         //打包
         String shell = "bash /opt/KmsPackage/shell/PackageWithSign.sh";

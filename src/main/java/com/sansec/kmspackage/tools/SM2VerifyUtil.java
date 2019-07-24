@@ -5,6 +5,7 @@ import com.sansec.asn1.pkcs.SM2StructureUtil;
 import com.sansec.device.bean.SM2refSignature;
 import com.sansec.util.KeyUtil;
 import org.springframework.util.Base64Utils;
+import org.springframework.util.ResourceUtils;
 
 import java.io.*;
 import java.security.*;
@@ -103,7 +104,7 @@ public class SM2VerifyUtil {
 	
 		public static byte[] toByteArray(String filename) throws IOException {
 
-	        File f = new File(filename);
+	        File f = ResourceUtils.getFile(filename);
 	        if (!f.exists()) {
 	            throw new FileNotFoundException(filename);
 	        }

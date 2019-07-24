@@ -6,6 +6,8 @@ public class CodeMsg {
 	private String msg;
 //    通用模块
 	public static CodeMsg SUCCESS = new CodeMsg(0, "success");
+	public static CodeMsg PARAMETER_VALID_ERROR = new CodeMsg(500001, "参数校验异常：%s");
+	public static CodeMsg SERVER_ERROR = new CodeMsg(500002, "服务端异常");
 	//文件上传
 	public static CodeMsg UPLOAD_SUCCESS = new CodeMsg(0, "文件上传成功");    //只是为了打印日志
 	public static CodeMsg UPLOAD_ERROR = new CodeMsg(500100, "文件上传失败：%s");
@@ -18,6 +20,7 @@ public class CodeMsg {
 	//打包
 	public static CodeMsg PACKAGE_SUCCESS = new CodeMsg(0, "打包成功");  //只是为了打印日志
 	public static CodeMsg PACKAGE_ERROR = new CodeMsg(500300, "打包失败：%s");
+	public static CodeMsg VERIFY_SIGN_ERROR = new CodeMsg(500301, "验证签名失败：%s");
 
 	//sql执行结果
 	public static CodeMsg SQL_SUCCESS = new CodeMsg(0, "SQL文件测试正确");  //只是为了打印日志
