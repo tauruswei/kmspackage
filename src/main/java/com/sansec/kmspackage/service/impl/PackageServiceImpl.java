@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Base64Utils;
 
@@ -81,7 +82,8 @@ public class PackageServiceImpl implements PackageService {
 
         PublicKey publicKey = null;
         try {
-            byte[] keyByte = SM2VerifyUtil.toByteArray("classpath:pubkey_ecc.0");
+            ClassPathResource cpr = new ClassPathResource("pubkey_ecc.0");
+            byte[] keyByte = SM2VerifyUtil.toByteArray(cpr);
             publicKey = SM2VerifyUtil.getPublicKey(keyByte);
         } catch (IOException e) {
             e.printStackTrace();

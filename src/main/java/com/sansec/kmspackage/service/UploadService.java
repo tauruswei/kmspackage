@@ -1,6 +1,7 @@
 package com.sansec.kmspackage.service;
 
 import com.sansec.kmspackage.result.Result;
+import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -11,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
  * @Description:
  * @Date: 2019/6/17 18:38
  */
+@Service
 public interface UploadService {
     public Result getStringObjectMap(@RequestParam("file") MultipartFile file, Model model, String fileName, String filePath);
 }

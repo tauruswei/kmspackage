@@ -3,54 +3,58 @@ package com.sansec.kmspackage.tools;
 import com.sansec.asn1.pkcs.SM2SignStructure;
 import com.sansec.asn1.pkcs.SM2StructureUtil;
 import com.sansec.device.bean.SM2refSignature;
-import com.sansec.util.KeyUtil;
+
+
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.util.Base64Utils;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.util.ResourceUtils;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.security.*;
 import java.util.Arrays;
 
 public class SM2VerifyUtil {
 	
-		public static void main(String[] args) {
-
-			// TODO Auto-generated method stub
-			byte[] bs = getMD5Two("G:/testverify/updatefile.zip");
-			byte b = (byte) 0x01;
-			byte[] bsPad = new byte[32];
-			bsPad = Arrays.copyOf(bs, bs.length+16);
-			Arrays.fill(bsPad, 16, 32, b);
-			
-			File file = new File("G:/testverify/updateSign");
-			String result = fileRead2String(file);
-			byte[] decodeRe = Base64Utils.decodeFromString(result);
-			
-			PublicKey publicKey = null;
-			
-			try {
-				byte[] keyByte = toByteArray("G:/upfiles/verify/signTest/pubkey_ecc.0");
-				publicKey = getPublicKey(keyByte);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-			try {
-				System.out.println(verifySign(publicKey, bsPad, decodeRe));
-			} catch (InvalidKeyException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (NoSuchAlgorithmException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (SignatureException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-		
-		}
+//		public static void main(String[] args) {
+//
+//			// TODO Auto-generated method stub
+//			byte[] bs = getMD5Two("G:/testverify/updatefile.zip");
+//			byte b = (byte) 0x01;
+//			byte[] bsPad = new byte[32];
+//			bsPad = Arrays.copyOf(bs, bs.length+16);
+//			Arrays.fill(bsPad, 16, 32, b);
+//
+//			File file = new File("G:/testverify/updateSign");
+//			String result = fileRead2String(file);
+//			byte[] decodeRe = Base64Utils.decodeFromString(result);
+//
+//			PublicKey publicKey = null;
+//
+//			try {
+//				byte[] keyByte = toByteArray("G:/upfiles/verify/signTest/pubkey_ecc.0");
+//				publicKey = getPublicKey(keyByte);
+//			} catch (IOException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//
+//			try {
+//				System.out.println(verifySign(publicKey, bsPad, decodeRe));
+//			} catch (InvalidKeyException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			} catch (NoSuchAlgorithmException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			} catch (SignatureException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//
+//
+//		}
 	
 //		private final static String[] strHex = { "0", "1", "2", "3", "4", "5",
 //	            "6", "7", "8", "9", "a", "b", "c", "d", "e", "f" };
@@ -102,35 +106,15 @@ public class SM2VerifyUtil {
 	        return result.toString();
 	    }
 	
-		public static byte[] toByteArray(String filename) throws IOException {
-
-	        File f = ResourceUtils.getFile(filename);
-	        if (!f.exists()) {
-	            throw new FileNotFoundException(filename);
-	        }
-
-	        ByteArrayOutputStream bos = new ByteArrayOutputStream((int) f.length());
-	        BufferedInputStream in = null;
-	        try {
-	            in = new BufferedInputStream(new FileInputStream(f));
-	            int buf_size = 1024;
-	            byte[] buffer = new byte[buf_size];
-	            int len = 0;
-	            while (-1 != (len = in.read(buffer, 0, buf_size))) {
-	                bos.write(buffer, 0, len);
-	            }
-	            return bos.toByteArray();
-	        } catch (IOException e) {
-	            e.printStackTrace();
-	            throw e;
-	        } finally {
-	            try {
-	                in.close();
-	            } catch (IOException e) {
-	                e.printStackTrace();
-	            }
-	            bos.close();
-	        }
+		public static byte[] toByteArray(ClassPathResource cpr) throws IOException {
+			byte[] bdata;
+			try {
+				bdata = FileCopyUtils.copyToByteArray(cpr.getInputStream());
+				return bdata;
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			return "fail".getBytes();
 	    }
 		
 		public static PublicKey getPublicKey(byte[] key) {
