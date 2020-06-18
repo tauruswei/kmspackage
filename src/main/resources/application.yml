@@ -1,16 +1,18 @@
 
-Spring:
+spring:
   thymeleaf:
     # 关闭缓存，实时刷新，生产环境需要改为true
     cache: false
     prefix: classpath:/templates/
     suffix: .html
     encoding: UTF-8
-    mode: HTML5
+    mode: HTML
   servlet:
     multipart:
       max-file-size: 500MB
       max-request-size: 500MB
+  resources:
+    static-locations: classpath:/static/
 server:
   port: 11111
   ssl:
@@ -20,18 +22,22 @@ server:
     keyAlias: tomcat
   servlet:
     context-path: /KmsPackage/
-
-
 kmsPackage:
-  SecKMS: E:/updatefile/SecKMS/
-  KMIP: E:/updatefile/KMIP/
-  Rest: E:/updatefile/Rest/RestFul/
-  Standard: E:/updatefile/Standard/
-  HadoopKMS: E:/updatefile/
-  Soap: E:/updatefile/Soap/Soap/
-  version: E:/updatefile/versioninfo.properties
-  updateSign: E:/updatefile/
-  packageWithoutSign:
-  packageWithSign:
-  sqlErrorLog: /opt/KmsPackage/sqlErrorLog.log
-  certPath: /opt/siwei/test06036.cer
+  SecKMS: E:/三未信安/打包升级/updatefile/updatefile/SecKMS/
+  KMIP: E:/三未信安/打包升级/updatefile/updatefile/KMIP/
+  Rest: E:/三未信安/打包升级/updatefile/updatefile/Rest/RestFul/
+  Standard: E:/三未信安/打包升级/updatefile/updatefile/Standard/
+  HadoopKMS: E:/三未信安/打包升级/updatefile/updatefile/HadoopKMS/HadoopKMS/
+  updateFilePath: E:/三未信安/打包升级/updatefile/updatefile/
+  Soap: E:/updatefile/updatefile/Soap/Soap/
+  version: E:/三未信安/打包升级/updatefile/updatefile/versioninfo.properties
+  updateSign: E:/三未信安/打包升级/updatefile/
+  packageWithoutSign: /opt/KmsPackage/updatefile/updatefile.zip
+  packageWithSign: /opt/KmsPackage/updatefile.zip
+  unPackageWithoutSign: E:/三未信安/打包升级/updatefile/
+  unPackageWithSign: /opt/KmsPackage/
+  sqlErrorLog: /opt/KmsPackage/log/sqlErrorLog.log
+  template:
+    Rest: /opt/KmsPackage/template/Rest.zip
+    HadoopKMS: /opt/KmsPackage/template/HadoopKMS.zip
+    otheroperation: /opt/KmsPackage/template/otheroperation.sh

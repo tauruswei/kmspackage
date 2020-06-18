@@ -34,6 +34,8 @@ public class VersionController {
     String standardPath;
     @Value("${kmsPackage.HadoopKMS}")
     String hadoopKMSPath;
+    @Value("${kmsPackage.updateFilePath}")
+    String updateFilePath;
 
     @GetMapping(value = "/getVersionInfo")
     public Map<String, Object> getVersionInfo(@RequestParam(value = "module", required = true, defaultValue = "SecKMS") String module) {
@@ -60,13 +62,14 @@ public class VersionController {
     }
 
     @GetMapping(value = "/updateVersionInfo")
-    public Map<String, Object> updateVersionInfo(@RequestParam(value = "module", required = true, defaultValue = "SecKMS") String module, @RequestParam(value = "version", required = true, defaultValue = "2.13") String version) {
+    public Map<String, Object> updateVersionInfo(@RequestParam(value = "module", required = true, defaultValue = "SecKMS") String module,
+                                                 @RequestParam(value = "version", required = true, defaultValue = "2.13") String version) {
 
         Map<String, Object> map = new HashMap<>();
         //当前版本号
         Properties pps = new Properties();
         InputStream is = null;
-        synchronized ("线程锁"){
+        synchronized ("线程锁") {
             byte[] bytes2 = new byte[0];
             try {
                 is = new FileInputStream(versionFile);
@@ -80,8 +83,8 @@ public class VersionController {
             }
 
 //        改变模块的版本号
-            pps.setProperty(module,version);
-            OutputStream  output = null;
+            pps.setProperty(module, version);
+            OutputStream output = null;
             try {
                 output = new FileOutputStream(versionFile);
             } catch (FileNotFoundException e) {
@@ -138,6 +141,12 @@ public class VersionController {
                 break;
             case "HadoopKMS":
                 files1 = FileTools.getFiles(hadoopKMSPath, files);
+                for (File file : files1) {
+                    map.put(file.getName(), sdf.format(new Date(file.lastModified())));
+                }
+                break;
+            case "sysfile":
+                files1 = FileTools.getFiles(updateFilePath, files);
                 for (File file : files1) {
                     map.put(file.getName(), sdf.format(new Date(file.lastModified())));
                 }

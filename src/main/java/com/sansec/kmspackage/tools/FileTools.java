@@ -1,8 +1,5 @@
 package com.sansec.kmspackage.tools;
 
-import ch.ethz.ssh2.Connection;
-import ch.ethz.ssh2.SCPClient;
-
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.attribute.BasicFileAttributes;
@@ -19,33 +16,33 @@ import java.util.*;
  */
 public class FileTools {
     private static final String DEFAULTPATH = "C:" + File.separator + "SANSECDB";
-    public String test(String fileName) {
-        String hostIp = null;
-        String userName = null;
-        String password = null;
-        String directory = null;
-
-        Connection conn = new Connection(hostIp);
-        try {
-            conn.connect();
-            boolean isAuthenticated = conn.authenticateWithPassword(userName, password);
-            if (!isAuthenticated) {
-                return "Error！Please make sure the correctness of username and password.";
-            }
-            SCPClient client = new SCPClient(conn);
-            client.put(fileName, directory); //本地文件scp到远程目录
-            conn.close();
-            return "success";
-        } catch (IOException e) {
-            if (e.getMessage().contains("Error during SCP transfer.")) {
-                return "Error！Please make sure the existence of the directory. Also,you should have the the permission to operator the folder.";
-            } else {
-                return "Error！Please make sure the correctness of the ip.";
-            }
-
-        }
-
-    }
+//    public String test(String fileName) {
+//        String hostIp = null;
+//        String userName = null;
+//        String password = null;
+//        String directory = null;
+//
+//        Connection conn = new Connection(hostIp);
+//        try {
+//            conn.connect();
+//            boolean isAuthenticated = conn.authenticateWithPassword(userName, password);
+//            if (!isAuthenticated) {
+//                return "Error！Please make sure the correctness of username and password.";
+//            }
+//            SCPClient client = new SCPClient(conn);
+//            client.put(fileName, directory); //本地文件scp到远程目录
+//            conn.close();
+//            return "success";
+//        } catch (IOException e) {
+//            if (e.getMessage().contains("Error during SCP transfer.")) {
+//                return "Error！Please make sure the existence of the directory. Also,you should have the the permission to operator the folder.";
+//            } else {
+//                return "Error！Please make sure the correctness of the ip.";
+//            }
+//
+//        }
+//
+//    }
     /**
      * @Description: 使用默认目录 c:/SANSECDB
      * @param filePath

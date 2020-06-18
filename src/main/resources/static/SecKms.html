@@ -26,14 +26,17 @@
                 contentType:false,
                 dataType:"json",
                 success:function(result){
-                    debugger;
                     for (var key in result) {
+                        debugger;
                        switch (key) {
                            case "SecKMS.war":
                                $("#SecKMS_lastModifiedTime").text("已上传！"+result[key]);
                                break;
                            case "updatebase.sql":
                                $("#updatebase_lastModifiedTime").text("已上传！"+result[key]);
+                               break;
+                           case "seckmsfb.sql":
+                               $("#seckmsfb_lastModifiedTime").text("已上传！"+result[key]);
                                break;
                            case "version":
                                $("#version").attr("placeholder","当前版本号是："+result[key]+"，请输入新的版本号");
@@ -77,14 +80,35 @@
             });
             var uploadInst = upload.render({
                 elem: '#updateBase' //绑定元素
-                ,url: '/KmsPackage/upload/SecKMS/sql' //上传接口
+                ,url: '/KmsPackage/upload/SecKMS/updatebase.sql' //上传接口
                 ,accept: 'file' //允许上传的文件类型
                 ,size: 0 //不限制上传文件的大小
                 ,before: function(obj){ //obj参数包含的信息，跟 choose回调完全一致，可参见上文。
                     layer.load(); //上传loading
                 }
                 ,done: function(res, index, upload){
-                    debugger;
+                    layer.closeAll('loading'); //关闭loading
+                    if(res.code==0){
+                        layer.msg("上传文件成功");
+                        init();
+                    }else{
+                        layer.msg(res.msg);
+                        downloadSqlErrorLog();
+                    }
+                }
+                ,error: function(index, upload){
+                    layer.closeAll('loading'); //关闭loading
+                }
+            });
+            var uploadInst = upload.render({
+                elem: '#seckmsfb' //绑定元素
+                ,url: '/KmsPackage/upload/SecKMS/seckmsfb.sql' //上传接口
+                ,accept: 'file' //允许上传的文件类型
+                ,size: 0 //不限制上传文件的大小
+                ,before: function(obj){ //obj参数包含的信息，跟 choose回调完全一致，可参见上文。
+                    layer.load(); //上传loading
+                }
+                ,done: function(res, index, upload){
                     layer.closeAll('loading'); //关闭loading
                     if(res.code==0){
                         layer.msg("上传文件成功");
@@ -115,6 +139,12 @@
         <i class="layui-icon">&#xe67c;</i>上传updatebase.sql
     </button>
     <span id="updatebase_lastModifiedTime" style="position:absolute;font-size:16px;font-family:KaiTi_GB2312;color: #ff3355"></span>
+    <br/>
+    <br/>
+    <button type="button" class="layui-btn" id="seckmsfb" style="width: 30%">
+        <i class="layui-icon">&#xe67c;</i>上传初始化数据库sql文件
+    </button>
+    <span id="seckmsfb_lastModifiedTime" style="position:absolute;font-size:16px;font-family:KaiTi_GB2312;color: #ff3355"></span>
     <br/>
     <br/>
     <input type="text" id="version"  class="layui-input" placeholder="" autocomplete="off" style="width:30%;font-size: medium">

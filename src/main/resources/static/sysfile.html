@@ -16,9 +16,10 @@
     <script src="js/jquery.form.js" charset="utf-8"></script>
     <script src="js/zoomify.min.js" charset="utf-8"></script>
     <script>
+        var contextPath = this.location.href.split("/KmsPackage")[0]+"/KmsPackage";
         function init(){
             $.ajax({
-                url:"/KmsPackage/getVersionInfo?module=ServerB",
+                url:"/KmsPackage/getVersionInfo?module=sysfile",
                 async: false, //同步执行
                 type:"get",
 //               data:form,
@@ -27,32 +28,37 @@
                 dataType:"json",
                 success:function(result){
                     for (var key in result) {
-                        switch (key) {
-                            case "update.zip":
-                                $("#zip_lastModifiedTime").text("已上传！"+result[key]);
-                                break;
-                            case "update.sh":
-                                $("#sh_lastModifiedTime").text("已上传！"+result[key]);
-                                break;
-                            case "version":
-                                $("#version").attr("placeholder","当前版本号是："+result[key].toString()+"，请输入新的版本号");
-                            default:
-                                break;
-                        }
+                       switch (key) {
+                           case "Readme.txt":
+                               $("#sysfile_lastModifiedTime").text("已上传！"+result[key]);
+                               break;
+                           case "otheroperation.sh":
+                               $("#otheroperation_lastModifiedTime").text("已上传！"+result[key]);
+                           default:
+                               break;
+                       }
                     }
                 },
-
                 error:function(e){
                     console.log("error");
                 }
             });
         }
+        function downloadSysfile() {
+            window.location.href = contextPath+"/download/sysfile";
+        }
+        function downloadOtheroperation() {
+            window.location.href = contextPath+ "/download/otheroperation";
+        }
+        function downloadTemplate() {
+            window.location.href = contextPath+"/downloadTemplate/otheroperation";
+        }
         layui.use('upload', function(){
             var upload = layui.upload;
             //执行实例
             var uploadInst = upload.render({
-                elem: '#SecKMS' //绑定元素
-                ,url: '/KmsPackage/upload/Standard/zip' //上传接口
+                elem: '#sysfile' //绑定元素
+                ,url: '/KmsPackage/upload/sysfile/zip' //上传接口
                 ,accept: 'file' //允许上传的文件类型
                 ,size: 0 //不限制上传文件的大小
                 ,before: function(obj){ //obj参数包含的信息，跟 choose回调完全一致，可参见上文。
@@ -64,7 +70,7 @@
                         layer.msg("上传文件成功");
                         init();
                     }else{
-                        layer.msg("上传文件失败");
+                        layer.msg(res.msg);
                     }
                 }
                 ,error: function(index, upload){
@@ -72,8 +78,8 @@
                 }
             });
             var uploadInst = upload.render({
-                elem: '#updateBase' //绑定元素
-                ,url: '/KmsPackage/upload/Standard/sh' //上传接口
+                elem: '#otheroperation' //绑定元素
+                ,url: '/KmsPackage/upload/otherOperation/sh' //上传接口
                 ,accept: 'file' //允许上传的文件类型
                 ,size: 0 //不限制上传文件的大小
                 ,before: function(obj){ //obj参数包含的信息，跟 choose回调完全一致，可参见上文。
@@ -85,7 +91,8 @@
                         layer.msg("上传文件成功");
                         init();
                     }else{
-                        layer.msg("上传文件失败");
+                        layer.msg(res.msg);
+                        downloadSqlErrorLog();
                     }
                 }
                 ,error: function(index, upload){
@@ -98,51 +105,28 @@
 </head>
 <body onload="init()">
 
-<center style="position:absolute;top:100px;width:100%;font-size:25px;font-family:KaiTi_GB2312 ">
-    <button type="button" class="layui-btn" id="SecKMS" style="width: 30%">
-        <i class="layui-icon">&#xe67c;</i>上传update.zip
-    </button>
-    <span id="zip_lastModifiedTime" style="position:absolute;font-size:16px;font-family:KaiTi_GB2312;color: #ff3355"></span>
-    <br/>
-    <br/>
-    <button type="button" class="layui-btn" id="updateBase" style="width: 30%">
-        <i class="layui-icon">&#xe67c;</i>上传update.sh
-    </button>
-    <span id="sh_lastModifiedTime" style="position:absolute;font-size:16px;font-family:KaiTi_GB2312;color: #ff3355"></span>
-    <br/>
-    <br/>
-    <input type="text" id="version"  class="layui-input" placeholder="" autocomplete="off" style="width:30%;font-size: medium">
-    <br/>
-    <br/>
-    <button class="layui-btn" lay-submit lay-filter="formDemo" style="margin-left: 0px" onclick="updateVersionInfo()">提交</button>
+<center style="position:absolute;top:100px;left:5%;width:100%;font-size:25px;font-family:KaiTi_GB2312 ">
+    <div style="width: 40%;position: relative;display: inline-block;">
+        <button type="button" class="layui-btn" id="sysfile"  style="width: 60%;float: left">
+            <i class="layui-icon">&#xe67c;</i>上传sysfile.zip
+        </button>
+        <button type="button" class="layui-btn layui-btn-warm" id="DownloadSysfile" onclick="downloadSysfile()" style="width: 10%;float: left;margin-left: 10px;padding-left: 0px;padding-right: 0px;margin-bottom: 30px">
+            下载
+        </button>
+        <span id="sysfile_lastModifiedTime" style="position:absolute;font-size:16px;font-family:KaiTi_GB2312;color: #ff3355"></span>
+        <br/>
+        <br/>
+        <button type="button" class="layui-btn" id="otheroperation"style="width: 60%;float: left">
+            <i class="layui-icon">&#xe67c;</i>上传otheroperation.sh
+        </button>
+        <button type="button" class="layui-btn layui-btn-warm" id="DownloadOtheroperation" onclick="downloadOtheroperation()" style="width: 10%;float: left;margin-left: 10px;padding-left: 0px;padding-right: 0px;margin-bottom: 30px">
+            下载
+        </button>
+        <button type="button" class="layui-btn layui-btn-warm" id="DownloadTemplateOtheroperation" onclick="downloadTemplate()" style="width: 10%;float: left;padding-left: 0px;padding-right: 0px">
+            下载模板
+        </button>
+        <span id="otheroperation_lastModifiedTime" style="position:absolute;font-size:16px;font-family:KaiTi_GB2312;color: #ff3355"></span>
+    </div>
 </center>
-
 </body>
-<script language="JavaScript">
-    function updateVersionInfo() {
-        var version = $("#version").val();
-        $.ajax({
-            url:"/KmsPackage/updateVersionInfo?module=ServerB&version="+version,
-            async: false, //同步执行
-            type:"get",
-//               data:form,
-            processData:false,
-            contentType:false,
-            dataType:"json",
-            success:function(res){
-                init();
-                $("#version").val("");
-                if(res.code==0){
-                    layer.msg("修改版本号成功");
-                }else{
-                    layer.msg("修改版本号失败");
-                }
-            },
-
-            error:function(e){
-                console.log("error");
-            }
-        });
-    }
-</script>
 </html>

@@ -1,6 +1,7 @@
 package com.sansec.kmspackage.service.impl;
 
 import com.sansec.kmspackage.exception.GlobalException;
+import com.sansec.kmspackage.model.FileModel;
 import com.sansec.kmspackage.result.CodeMsg;
 import com.sansec.kmspackage.result.Result;
 import com.sansec.kmspackage.service.PackageService;
@@ -9,25 +10,18 @@ import com.sansec.kmspackage.tools.ExecShell;
 import com.sansec.kmspackage.tools.LogTool;
 import com.sansec.kmspackage.tools.SM2VerifyUtil;
 import com.sansec.util.PrintUtil;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
-import org.springframework.util.Base64Utils;
 
-import java.io.File;
-import java.io.IOException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
+import java.io.*;
 import java.security.PublicKey;
-import java.security.SignatureException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-
-import static com.sansec.kmspackage.tools.LogTool.returnErrorInfo;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * @Author: WeiBingtao/13156050650@163.com
@@ -41,6 +35,9 @@ public class PackageServiceImpl implements PackageService {
 
     @Value("${kmsPackage.updateSign}")
     String filePath;
+
+    @Value("${kmsPackage.updateFilePath}")
+    String updateFilePath;
 
     @Override
     public Result packageZipFile(String shell) {
@@ -105,5 +102,36 @@ public class PackageServiceImpl implements PackageService {
         }else{
             throw new GlobalException(CodeMsg.VERIFY_SIGN_ERROR);
         }
+    }
+    public Result updateFileList(){
+        List<FileModel> list = func(new File(updateFilePath), new ArrayList<FileModel>());
+        return Result.success(list);
+    }
+    private List func(File file,List list){
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        File[] fs = file.listFiles();
+        String md5;
+        for(File f:fs){
+//            若是目录，则递归打印该目录下的文件
+            if(f.isDirectory())
+//                if("HadoopKMS".equals(f.getName()))
+//                    continue;
+                func(f,list);
+            if(f.isFile())	{
+                FileModel fileModel = new FileModel();
+                try {
+                    fileModel.setFileName(f.getAbsolutePath().split("updatefile")[2]);
+//                    记录文件哈希
+                    md5 = DigestUtils.md5Hex(new FileInputStream(f.getAbsolutePath()));
+                    fileModel.setFileHash(md5);
+//                    记录文件得修改时间
+                    fileModel.setFileLastModifiedTime(sdf.format(new Date(f.lastModified())));
+                    list.add(fileModel);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return list;
     }
 }

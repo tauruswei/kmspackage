@@ -16,6 +16,7 @@
     <script src="js/jquery.form.js" charset="utf-8"></script>
     <script src="js/zoomify.min.js" charset="utf-8"></script>
     <script>
+        var contextPath = this.location.href.split("/KmsPackage")[0]+"/KmsPackage";
         function init(){
             $.ajax({
                 url:"/KmsPackage/getVersionInfo?module=HadoopKMS",
@@ -26,10 +27,9 @@
                 contentType:false,
                 dataType:"json",
                 success:function(result){
-                    debugger;
                     for (var key in result) {
                        switch (key) {
-                           case "HadoopKMS.zip":
+                           case "HadoopKMS.sh":
                                $("#HadoopKMS_lastModifiedTime").text("已上传！"+result[key]);
                                break;
                            case "version":
@@ -45,8 +45,11 @@
                 }
             });
         }
-        function downloadSqlErrorLog(){
-            window.location.href = "package/downloadSqlErrorLog";
+        function download() {
+            window.location.href = contextPath+"/download/HadoopKMS";
+        }
+        function downloadTemplate() {
+            window.location.href = contextPath+"/downloadTemplate/HadoopKMS";
         }
         layui.use('upload', function(){
             var upload = layui.upload;
@@ -72,47 +75,31 @@
                     layer.closeAll('loading'); //关闭loading
                 }
             });
-            var uploadInst = upload.render({
-                elem: '#updateBase' //绑定元素
-                ,url: '/KmsPackage/upload/SecKMS/sql' //上传接口
-                ,accept: 'file' //允许上传的文件类型
-                ,size: 0 //不限制上传文件的大小
-                ,before: function(obj){ //obj参数包含的信息，跟 choose回调完全一致，可参见上文。
-                    layer.load(); //上传loading
-                }
-                ,done: function(res, index, upload){
-                    debugger;
-                    layer.closeAll('loading'); //关闭loading
-                    if(res.code==0){
-                        layer.msg("上传文件成功");
-                        init();
-                    }else{
-                        layer.msg(res.msg);
-                        downloadSqlErrorLog();
-                    }
-                }
-                ,error: function(index, upload){
-                    layer.closeAll('loading'); //关闭loading
-                }
-            });
         });
 
     </script>
 </head>
 <body onload="init()">
 
-<center style="position:absolute;top:100px;width:100%;font-size:25px;font-family:KaiTi_GB2312 ">
-    <button type="button" class="layui-btn" id="HadoopKMS" style="width: 30%">
-        <i class="layui-icon">&#xe67c;</i>上传HadoopKMS.zip
-    </button>
-    <span id="HadoopKMS_lastModifiedTime" style="position:absolute;font-size:16px;font-family:KaiTi_GB2312;color: #ff3355"></span>
-
-    <br/>
-    <br/>
-    <input type="text" id="version"  class="layui-input" placeholder="" autocomplete="off" style="width:30%;font-size: medium">
-    <br/>
-    <br/>
-    <button class="layui-btn" lay-submit lay-filter="formDemo" style="margin-left: 0px" onclick="updateVersionInfo()">提交</button>
+<center style="position:absolute;top:100px;left:5%;width:100%;font-size:25px;font-family:KaiTi_GB2312 ">
+    <div style="width: 40%;position: relative;display: inline-block;">
+        <button type="button" class="layui-btn" id="HadoopKMS" style="width: 60%;float: left">
+            <i class="layui-icon">&#xe67c;</i>上传HadoopKMS.zip
+        </button>
+        <button type="button" class="layui-btn layui-btn-warm" id="Download" onclick="download()" style="width: 10%;float: left;margin-left: 10px;padding-left: 0px;padding-right: 0px;margin-bottom: 30px">
+            下载
+        </button>
+        <button type="button" class="layui-btn layui-btn-warm" id="DownloadTemplate" onclick="downloadTemplate()" style="width: 10%;float: left;padding-left: 0px;padding-right: 0px">
+            下载模板
+        </button>
+        <span id="HadoopKMS_lastModifiedTime" style="position:absolute;font-size:16px;font-family:KaiTi_GB2312;color: #ff3355"></span>
+        <br/>
+        <br/>
+        <input type="text" id="version"  class="layui-input" placeholder="" autocomplete="off" style="float: left;width:60%;font-size: medium">
+        <br/>
+        <br/>
+        <button class="layui-btn" lay-submit lay-filter="formDemo" style="position: relative;left:-20%;" onclick="updateVersionInfo()">提交</button>
+    </div>
 </center>
 
 </body>

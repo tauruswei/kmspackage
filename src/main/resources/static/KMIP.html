@@ -26,7 +26,6 @@
                 contentType:false,
                 dataType:"json",
                 success:function(result){
-                    debugger;
                     for (var key in result) {
                         switch (key) {
                             case "KMIP.zip":
@@ -59,7 +58,6 @@
                 }
                 ,done: function(res, index, upload){
                     layer.closeAll('loading'); //关闭loading
-                    debugger;
                     if(res.code==0){
                         layer.msg("上传文件成功");
                         init();

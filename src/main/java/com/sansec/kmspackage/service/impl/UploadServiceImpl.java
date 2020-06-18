@@ -12,9 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
+import java.io.*;
 
 import static com.sansec.kmspackage.tools.LogTool.returnErrorInfo;
 
@@ -35,7 +33,6 @@ public class UploadServiceImpl implements UploadService {
             return Result.error(CodeMsg.UPLOAD_ERROR.fillArgs("The file is empty!"));
         }
         try {
-//            System.out.println("路径是：" + filePath);
             File localFile = new File(filePath, fileName);
             File parent = localFile.getParentFile();
             if (parent != null && !parent.exists()) {
@@ -49,6 +46,9 @@ public class UploadServiceImpl implements UploadService {
         }
         logger.info(LogTool.genLogMsg(MDC.get("ip"), "", "", "", "", "",
                 CodeMsg.UPLOAD_SUCCESS.getCode(), CodeMsg.UPLOAD_SUCCESS.getMsg(), "", ""));
+
         return Result.success("");
     }
+
+
 }

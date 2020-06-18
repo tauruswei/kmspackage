@@ -23,8 +23,9 @@
         mycars[3]="Rest";
         mycars[4]="Standard";
         mycars[5]="HadoopKMS";
-        mycars[6]="Soap";
-        mycars[7]="Package";
+        mycars[6]="sysfile";
+        mycars[7]="FileList";
+        mycars[8]="Package";
         function init(){
             document.getElementById("iframe").src=contextPath+"/KmsPackage/welcome.html";
         }
@@ -64,9 +65,17 @@
             changeColor("HadoopKMS");
             document.getElementById("iframe").src = contextPath + "/KmsPackage/HadoopKMS.html";
         }
+        function sysfile() {
+            changeColor("sysfile");
+            document.getElementById("iframe").src = contextPath + "/KmsPackage/sysfile.html";
+        }
         function zipPackage() {
             changeColor("Package");
             document.getElementById("iframe").src = contextPath + "/KmsPackage/Package.html";
+        }
+        function fileList() {
+            changeColor("FileList");
+            document.getElementById("iframe").src = contextPath + "/KmsPackage/file/getFileList";
         }
     </script>
 </head>
@@ -134,9 +143,16 @@
                 </a>
             </li>
             <li>
-                <a onclick="modifyPassword()" id = "Soap">
+                <a onclick="sysfile()" id = "sysfile">
                     <i class="iconfont">&#xe83c;</i>
-                    <cite>Soap</cite>
+                    <cite>sysfile</cite>
+                    <i class="iconfont nav_right">&#xe697;</i>
+                </a>
+            </li>
+            <li>
+                <a onclick="fileList()" id = "FileList">
+                    <i class="iconfont">&#xe83c;</i>
+                    <cite>FileList</cite>
                     <i class="iconfont nav_right">&#xe697;</i>
                 </a>
             </li>

@@ -3,7 +3,9 @@ package com.sansec.kmspackage.controller;
 import com.sansec.kmspackage.result.CodeMsg;
 import com.sansec.kmspackage.result.Result;
 import com.sansec.kmspackage.service.PackageService;
+import com.sansec.kmspackage.service.impl.UploadServiceImpl;
 import com.sansec.kmspackage.tools.DownloadUtil;
+import com.sansec.kmspackage.tools.ExecShell;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.ui.Model;
@@ -36,9 +38,15 @@ public class PackageController {
     String packageWithSign;
     @Value("${kmsPackage.sqlErrorLog}")
     String sqlErrorLogPath;
+    @Value("${kmsPackage.unPackageWithoutSign}")
+    String unPackageWithoutSign;
+    @Value("${kmsPackage.unPackageWithSign}")
+    String unPackageWithSign;
 
     @Autowired
     PackageService packageService;
+    @Autowired
+    UploadServiceImpl uploadService;
 
     @GetMapping(value = "/packageWithoutSign")
     public Result packageWithoutSign() {
@@ -86,6 +94,21 @@ public class PackageController {
     @GetMapping(value = "/downloadSqlErrorLog")
     public void downloadSqlErrorLog(HttpServletRequest request, HttpServletResponse response) throws IOException {
         DownloadUtil.download(request, response, sqlErrorLogPath);
+    }
+    @RequestMapping("/unPackageWithSign")
+    public Result unPackageWithSign(@RequestParam("file") MultipartFile file, Model model) throws InterruptedException {
+        Result result = uploadService.getStringObjectMap(file, model, "updatefile.zip", unPackageWithSign);
+        ExecShell.getExecShellProcess("bash /opt/KmsPackage/shell/UnPackageWithSign.sh").waitFor();
+        return result;
+    }
+
+    @RequestMapping("/unPackageWithoutSign")
+    public Result unPackageWithoutSign(@RequestParam("file") MultipartFile file, Model model) throws InterruptedException {
+        Result result = uploadService.getStringObjectMap(file, model, "updatefile.zip", unPackageWithoutSign);
+        if (result.getCode()==0){
+            ExecShell.getExecShellProcess("bash /opt/KmsPackage/shell/UnPackageWithoutSign.sh").waitFor();
+        }
+        return result;
     }
 
 }

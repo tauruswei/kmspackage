@@ -27,7 +27,9 @@ public class CodeMsg {
 	public static CodeMsg SQL_ERROR = new CodeMsg(500400, "SQL文件测试有误");
 
 //	其他模块
-    public static CodeMsg UNZIP_ERROR = new CodeMsg(500401, "解压HadoopKMS.zip出错");
+    public static CodeMsg UNZIP_HADOOPKMS_ERROR = new CodeMsg(500401, "解压HadoopKMS.zip出错");
+    public static CodeMsg UNZIP_REST_ERROR = new CodeMsg(500401, "解压Rest.zip出错");
+    public static CodeMsg UNZIP_SYSFILE_ERROR = new CodeMsg(500401, "解压sysfile.zip出错");
 
 	private CodeMsg( ) {
 	}
